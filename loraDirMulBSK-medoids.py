@@ -330,6 +330,12 @@ class myNode():
                 ax.add_artist(plt.Circle((self.x, self.y), 4, fill=True, color='red'))
             elif clusters[i] == 2:
                 ax.add_artist(plt.Circle((self.x, self.y), 4, fill=True, color='green'))
+            elif clusters[i] == 3:
+                ax.add_artist(plt.Circle((self.x, self.y), 4, fill=True, color='indigo'))
+            elif clusters[i] == 4:
+                ax.add_artist(plt.Circle((self.x, self.y), 4, fill=True, color='pink'))
+            elif clusters[i] == 5:
+                ax.add_artist(plt.Circle((self.x, self.y), 4, fill=True, color='brown'))
                 
 #
 # this function creates a packet (associated with a node)
@@ -672,12 +678,9 @@ while(not_finished):
         clusters[i] = cluster
     total_cost = cost(medoids, node_positions)
     clusters_initial = copy.deepcopy(clusters)
-    old_total_cost = copy.deepcopy(total_cost)
-    print old_total_cost
+    old_total_cost = copy.deepcopy(total_cost)    
     
-    
-    # Swapping entre chaque medoid et un node de son cluster random et calcul du nouveau coût
-  
+    # Swapping entre chaque medoid et un node de son cluster random et calcul du nouveau coût  
     for i in range(len(medoids)):
         medoids_temp = medoids
         medoids_list = []
@@ -698,7 +701,6 @@ while(not_finished):
             medoids = medoids_list[swap]
     if total_cost == old_total_cost:
         not_finished = False
-    print total_cost
 
 if (graphics == 1):
     for i in range (k):
@@ -710,8 +712,8 @@ for i in range (0, nrBS):
     posxBS[i] = medoids[i][0]
     posyBS[i] = medoids[i][1]
     
-#for i in range(0,len(nodes)):
-    #nodes[i].specialDraw(i)
+for i in range(0,len(nodes)):
+    nodes[i].specialDraw(i)
 
 ###
     

@@ -318,6 +318,13 @@ class myNode():
                 ax.add_artist(plt.Circle((self.x, self.y), 4, fill=True, color='red'))
             elif clusters[i] == 2:
                 ax.add_artist(plt.Circle((self.x, self.y), 4, fill=True, color='green'))
+            elif clusters[i] == 3:
+                ax.add_artist(plt.Circle((self.x, self.y), 4, fill=True, color='indigo'))
+            elif clusters[i] == 4:
+                ax.add_artist(plt.Circle((self.x, self.y), 4, fill=True, color='pink'))
+            elif clusters[i] == 5:
+                ax.add_artist(plt.Circle((self.x, self.y), 4, fill=True, color='brown'))
+            
 
 #
 # this function creates a packet (associated with a node)
