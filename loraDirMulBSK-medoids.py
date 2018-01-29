@@ -706,7 +706,6 @@ while(not_finished):
     if medoids == medoids_initial:
         not_finished = False
     
-
 if (graphics == 1):
     for i in range (k):
         ax.add_artist(plt.Circle((medoids[i][0], medoids[i][1]), 2, fill=True, color='red'))
