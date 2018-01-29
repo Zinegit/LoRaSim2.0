@@ -647,11 +647,7 @@ for i in range(k):
     medoids.append(node_positions[ind_med])
 
 not_finished = True
-compteur = 0
 while(not_finished):
-    compteur += 1
-    print("compteur : " + str(compteur))
-    medoids_initial = copy.deepcopy(medoids)
     # On détermine à quel cluster appartient chaque point
     clusters = [0 for i in range(len(node_positions))]
     for i in range(len(node_positions)):
@@ -661,7 +657,9 @@ while(not_finished):
         cluster = np.argmin(distances)
         clusters[i] = cluster
     total_cost = cost(medoids, node_positions)
-    print clusters
+    clusters_initial = copy.deepcopy(clusters)
+    old_total_cost = copy.deepcopy(total_cost)
+    print old_total_cost
     
     
     # Swapping entre chaque medoid et un node de son cluster random et calcul du nouveau coût
@@ -684,11 +682,10 @@ while(not_finished):
             total_cost = mini
             swap = np.argmin(total_costs)
             medoids = medoids_list[swap]
-    if medoids == medoids_initial:
+    if total_cost == old_total_cost:
         not_finished = False
-    print("medoids : " + str(medoids))
-    print("medoids_initial : " + str(medoids_initial))
-    
+    print total_cost
+
 if (graphics == 1):
     for i in range (k):
         ax.add_artist(plt.Circle((medoids[i][0], medoids[i][1]), 2, fill=True, color='red'))
@@ -698,11 +695,6 @@ if (graphics == 1):
 for i in range (0, nrBS):
     posxBS[i] = medoids[i][0]
     posyBS[i] = medoids[i][1]
-    
-a = [1,2]
-b = [3,4]    
-distance = dist(a, b)
-print ("distance : " + str(distance))
 
 ###
     
