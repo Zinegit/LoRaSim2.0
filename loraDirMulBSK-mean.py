@@ -304,6 +304,20 @@ class myNode():
         if (graphics == 1):
             global ax
             ax.add_artist(plt.Circle((self.x, self.y), 2, fill=True, color='blue'))
+            
+    def specialDraw(self, i):
+        # graphics for node
+        global graphics
+        if (graphics == 1):
+            global ax
+            global clusters
+            if clusters[i] == 0:
+                print i
+                ax.add_artist(plt.Circle((self.x, self.y), 4, fill=True, color='blue'))
+            elif clusters[i] == 1:
+                ax.add_artist(plt.Circle((self.x, self.y), 4, fill=True, color='red'))
+            elif clusters[i] == 2:
+                ax.add_artist(plt.Circle((self.x, self.y), 4, fill=True, color='green'))
 
 #
 # this function creates a packet (associated with a node)
@@ -668,6 +682,9 @@ if (graphics == 1):
 for i in range (0, nrBS):
     posxBS[i] = C_x[i]
     posyBS[i] = C_y[i]
+
+for i in range(0,len(nodes)):
+    nodes[i].specialDraw(i)
 
 
 ###
