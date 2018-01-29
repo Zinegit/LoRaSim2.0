@@ -645,14 +645,13 @@ medoids = []
 for i in range(k):
     ind_med = random.randint(0, len(node_positions)-1)
     medoids.append(node_positions[ind_med])
-    #node_positions_temp.remove(node_positions_temp[ind_med])
-print(medoids)
 
 not_finished = True
+compteur = 0
 while(not_finished):
-    medoids_initial = medoids
-    print("ok")
-    print(medoids)
+    compteur += 1
+    print("compteur : " + str(compteur))
+    medoids_initial = copy.deepcopy(medoids)
     # On détermine à quel cluster appartient chaque point
     clusters = [0 for i in range(len(node_positions))]
     for i in range(len(node_positions)):
@@ -661,10 +660,8 @@ while(not_finished):
             distances.append(dist(node_positions[i], medoids[j]))
         cluster = np.argmin(distances)
         clusters[i] = cluster
-    print(clusters)
-
     total_cost = cost(medoids, node_positions)
-    print(total_cost)
+    print clusters
     
     
     # Swapping entre chaque medoid et un node de son cluster random et calcul du nouveau coût
@@ -672,39 +669,25 @@ while(not_finished):
     for i in range(len(medoids)):
         medoids_temp = medoids
         medoids_list = []
-        print("i: " +str(i))
         total_costs = []
-        #print("mdr")
         compteur = 0
         for j in range(len(node_positions)):
-            print("j :" + str(j))
-            #print(clusters[j])
-            #print(i)
             if clusters[j] == i:
                 compteur += 1
-                print compteur
-                #print("true")
-                print("medoids_list: " + str(medoids_list))
                 medoids_temp.remove(medoids[i])
                 medoids_temp.insert(i, node_positions[j])
-                medoids_list.append(medoids_temp)
-                print("medoids_temp: " + str(medoids_temp))
-                print("medoids_list: " + str(medoids_list))
+                medoids_list.append(copy.deepcopy(medoids_temp))
                 total_costs.append(cost(medoids_temp, node_positions))
-                print(total_costs[compteur - 1])
-                print("total_costs :" + str(total_costs))
-        print(total_costs)
-        mini = min(total_costs)
+        if len(total_costs) > 0:
+            mini = min(total_costs)
         if total_cost > mini:
             total_cost = mini
-            print total_cost
             swap = np.argmin(total_costs)
-            print swap
-            print medoids_list
             medoids = medoids_list[swap]
-        print("medoids :" + str(medoids))
     if medoids == medoids_initial:
         not_finished = False
+    print("medoids : " + str(medoids))
+    print("medoids_initial : " + str(medoids_initial))
     
 if (graphics == 1):
     for i in range (k):
@@ -715,6 +698,11 @@ if (graphics == 1):
 for i in range (0, nrBS):
     posxBS[i] = medoids[i][0]
     posyBS[i] = medoids[i][1]
+    
+a = [1,2]
+b = [3,4]    
+distance = dist(a, b)
+print ("distance : " + str(distance))
 
 ###
     
