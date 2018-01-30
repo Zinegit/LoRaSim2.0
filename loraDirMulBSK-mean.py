@@ -312,7 +312,6 @@ class myNode():
             global ax
             global clusters
             if clusters[i] == 0:
-                print i
                 ax.add_artist(plt.Circle((self.x, self.y), 4, fill=True, color='blue'))
             elif clusters[i] == 1:
                 ax.add_artist(plt.Circle((self.x, self.y), 4, fill=True, color='red'))

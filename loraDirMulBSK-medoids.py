@@ -324,7 +324,6 @@ class myNode():
             global ax
             global clusters
             if clusters[i] == 0:
-                print i
                 ax.add_artist(plt.Circle((self.x, self.y), 4, fill=True, color='blue'))
             elif clusters[i] == 1:
                 ax.add_artist(plt.Circle((self.x, self.y), 4, fill=True, color='red'))
@@ -681,24 +680,23 @@ while(not_finished):
     old_total_cost = copy.deepcopy(total_cost)    
     
     # Swapping entre chaque medoid et un node de son cluster random et calcul du nouveau coût  
-    for i in range(len(medoids)):
-        medoids_temp = medoids
+    for i in range(len(medoids)): 
         medoids_list = []
         total_costs = []
         compteur = 0
         for j in range(len(node_positions)):
             if clusters[j] == i:
                 compteur += 1
-                medoids_temp.remove(medoids[i])
-                medoids_temp.insert(i, node_positions[j])
-                medoids_list.append(copy.deepcopy(medoids_temp))
-                total_costs.append(cost(medoids_temp, node_positions))
+                medoids.remove(medoids[i])
+                medoids.insert(i, node_positions[j])
+                medoids_list.append(copy.deepcopy(medoids))
+                total_costs.append(cost(medoids, node_positions))
         if len(total_costs) > 0:
             mini = min(total_costs)
-        if total_cost > mini:
-            total_cost = mini
-            swap = np.argmin(total_costs)
-            medoids = medoids_list[swap]
+            if total_cost >= mini:
+                total_cost = mini
+                swap = np.argmin(total_costs)
+                medoids = medoids_list[swap]
     if total_cost == old_total_cost:
         not_finished = False
 
