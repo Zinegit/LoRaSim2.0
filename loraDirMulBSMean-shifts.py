@@ -83,7 +83,7 @@ full_collision = False
 def euclid_distance(x, xi):
     return np.sqrt(np.sum((x - xi)**2))
 
-def neighbourhood_points(X, x_centroid, distance = 327):
+def neighbourhood_points(X, x_centroid, distance = 322):
     eligible_X = []
     for x in X:
         distance_between = euclid_distance(x, x_centroid)
@@ -120,7 +120,7 @@ def checkcollision(packet):
        return 0
     if packetsAtBS[packet.bs]:
         for other in packetsAtBS[packet.bs]:
-            if other.id != packet.nodeid:
+            if other.id != packet.nodeid:  
                # simple collision
                if frequencyCollision(packet, other.packet[packet.bs]) \
                    and sfCollision(packet, other.packet[packet.bs]):
@@ -617,8 +617,6 @@ original_X = node_positions
 original_X = np.copy(original_X)
 X = np.copy(original_X)
 
-print X
-
 kernel_bandwidth = 1000
 
 past_X = []
@@ -627,7 +625,6 @@ for it in range(n_iterations):
     for i, x in enumerate(X):
         ### Step 1. For each datapoint x ∈ X, find the neighbouring points N(x) of x.
         neighbours = neighbourhood_points(X, x)
-        print "neughbours : " + str(neighbours) 
         
         ### Step 2. For each datapoint x ∈ X, calculate the mean shift m(x).
         numerator = 0
@@ -645,12 +642,28 @@ for it in range(n_iterations):
     
     past_X.append(np.copy(X))
     
-print "X :" + str(X)
+X_list = [[0, 0] for i in range(len(X))]
+for i in range(len(X)):
+    X_list[i][0] = X[i][0]  
+    X_list[i][1] = X[i][1]  
 
-#placement des bs
-for i in range (nrNodes):
-    posxBS[i] = X[i][0]
-    posyBS[i] = X[i][1] 
+print X_list 
+
+base_stations = []
+
+for i in range(len(X_list)):
+    if X_list[i] not in base_stations:
+        base_stations.append(X_list[i])
+    
+print base_stations
+
+  
+
+
+#placement des bs. On prend le barycentre de chaque 
+for i in range (len(base_stations)):
+    posxBS[i] = base_stations[i][0]
+    posyBS[i] = base_stations[i][1] 
     
 #print posxBS
 #print posyBS
