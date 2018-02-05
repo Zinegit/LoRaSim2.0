@@ -491,15 +491,15 @@ def transmit(env,node):
 
 
 # get arguments
-if len(sys.argv) >= 6:
+if len(sys.argv) >= 5:
     nrNodes = int(sys.argv[1])
     avgSendTime = int(sys.argv[2])
     experiment = int(sys.argv[3])
     simtime = int(sys.argv[4])
+    """
     nrBS = int(sys.argv[5])
     posxBS = np.zeros(nrBS)
     posyBS = np.zeros(nrBS)
-    """
     posxBS[0] = int(sys.argv[6])
     posyBS[0] = int(sys.argv[7])
     posxBS[1] = int(sys.argv[8])
@@ -517,7 +517,6 @@ if len(sys.argv) >= 6:
     print "AvgSendTime (exp. distributed):",avgSendTime
     print "Experiment: ", experiment
     print "Simtime: ", simtime
-    print "nrBS: ", nrBS
     
     print "Full Collision: ", full_collision
 else:
@@ -656,18 +655,15 @@ for i in range(len(X_list)):
         base_stations.append(X_list[i])
     
 print base_stations
+nrBS = len(base_stations)
 
-  
+posxBS = [0 for i in range(nrBS)]
+posyBS = [0 for i in range(nrBS)]
 
 
-#placement des bs. On prend le barycentre de chaque 
 for i in range (len(base_stations)):
     posxBS[i] = base_stations[i][0]
     posyBS[i] = base_stations[i][1] 
-    
-#print posxBS
-#print posyBS
-
 
 ###
     
