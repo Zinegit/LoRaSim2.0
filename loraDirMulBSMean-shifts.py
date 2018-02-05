@@ -83,7 +83,7 @@ full_collision = False
 def euclid_distance(x, xi):
     return np.sqrt(np.sum((x - xi)**2))
 
-def neighbourhood_points(X, x_centroid, distance = 322):
+def neighbourhood_points(X, x_centroid, distance = 200):
     eligible_X = []
     for x in X:
         distance_between = euclid_distance(x, x_centroid)
@@ -646,15 +646,12 @@ for i in range(len(X)):
     X_list[i][0] = X[i][0]  
     X_list[i][1] = X[i][1]  
 
-print X_list 
-
 base_stations = []
 
 for i in range(len(X_list)):
     if X_list[i] not in base_stations:
         base_stations.append(X_list[i])
     
-print base_stations
 nrBS = len(base_stations)
 
 posxBS = [0 for i in range(nrBS)]
@@ -735,6 +732,7 @@ der = len(recPackets)/float(packetSeq)
 print "DER:", der
 #der = (nrReceived)/float(sent)
 #print "DER method 2:", der
+print "nrBS:", nrBS
 
 # this can be done to keep graphics visible
 if (graphics == 1):
