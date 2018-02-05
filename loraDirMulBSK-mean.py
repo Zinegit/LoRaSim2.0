@@ -684,6 +684,9 @@ if (graphics == 1):
         plt.draw()
         
 
+print C_x
+print C_y 
+
 #Placement des bs
 for i in range (0, nrBS):
     posxBS[i] = C_x[i]

@@ -59,7 +59,7 @@ import matplotlib.pyplot as plt
 import os
 from matplotlib.patches import Rectangle
 
-## K-MEAN
+## MEAN SHIFT
 import copy
 ##
 
@@ -78,11 +78,23 @@ full_collision = False
 
 
 ##
-#K-mean part
+#Mean shift part
+    
+def euclid_distance(x, xi):
+    return np.sqrt(np.sum((x - xi)**2))
 
-# Euclidean Distance Caculator
-def dist(a, b, ax=1):
-    return np.linalg.norm(a - b, axis=ax)
+def neighbourhood_points(X, x_centroid, distance = 327):
+    eligible_X = []
+    for x in X:
+        distance_between = euclid_distance(x, x_centroid)
+        # print('Evaluating: [%s vs %s] yield dist=%.2f' % (x, x_centroid, distance_between))
+        if distance_between <= distance:
+            eligible_X.append(x)
+    return eligible_X
+
+def gaussian_kernel(distance, bandwidth):
+    val = (1/(bandwidth*math.sqrt(2*math.pi))) * np.exp(-0.5*((distance / bandwidth))**2)
+    return val
 ##
     
 
@@ -588,28 +600,6 @@ if (graphics == 1):
 
     ax.add_patch(Rectangle((0, 0), maxX, maxY, fill=None, alpha=1))
 
-""" Avant l'optimisation du placement des bs
-# list of base stations
-bs = []
-
-# list of packets at each base station, init with 0 packets
-packetsAtBS = []
-packetsRecBS = []
-for i in range(0,nrBS):
-    b = myBS(i)
-    bs.append(b)
-    packetsAtBS.append([])
-    packetsRecBS.append([])
-    
-
-for i in range(0,nrNodes):
-    # myNode takes period (in ms), base station id packetlen (in Bytes)
-    # 1000000 = 16 min
-    node = myNode(i, avgSendTime,20)
-    nodes.append(node)
-    env.process(transmit(env,node))
-"""
-
 ## Après optimisation du placement des bs 
 
 #On place juste les nodes sans créer de paquets virtuels (car ils dépendent de la position des bs)
@@ -622,52 +612,48 @@ for i in range(0,nrNodes):
     nodes.append(node)
     
     
-###K-MEAN PART:
+###MEAN SHIFT PART
+original_X = node_positions
+original_X = np.copy(original_X)
+X = np.copy(original_X)
 
-# Number of clusters
-k = nrBS
-# X coordinates of random centroids
-C_x = np.random.randint(0, maxX, size=k)
-# Y coordinates of random centroids
-C_y = np.random.randint(0, maxY, size=k)
-C = np.array(list(zip(C_x, C_y)))
+print X
 
+kernel_bandwidth = 1000
 
-# To store the value of centroids when it updates
-C_old = np.zeros(C.shape)
-# Cluster Lables(0, 1, 2)
-clusters = np.zeros(len(node_positions))
-# Error func. - Distance between new centroids and old centroids
-error = dist(C, C_old, None)
-# Loop will run till the error becomes zero
-while error != 0:
-    # Assigning each value to its closest cluster
-    for i in range(len(node_positions)):
-        distances = dist(node_positions[i], C)
-        cluster = np.argmin(distances)
-        clusters[i] = cluster
-    # Storing the old centroid values
-    C_old = copy.deepcopy(C)
-    # Finding the new centroids by taking the average value
-    for i in range(k):
-        points = [node_positions[j] for j in range(len(node_positions)) if clusters[j] == i]
-        C[i] = np.mean(points, axis=0)
-        C_x[i] = C[i][0]
-        C_y[i] = C[i][1]
-        #voir évolution
-        #ax.add_artist(plt.Circle((C_x[i], C_y[i]), 2, fill=True, color='red'))
-        #plt.draw()
-    error = dist(C, C_old, None)
-if (graphics == 1):
-    for i in range (k):
-        ax.add_artist(plt.Circle((C_x[i], C_y[i]), 2, fill=True, color='red'))
-        plt.draw()
+past_X = []
+n_iterations = 50
+for it in range(n_iterations):
+    for i, x in enumerate(X):
+        ### Step 1. For each datapoint x ∈ X, find the neighbouring points N(x) of x.
+        neighbours = neighbourhood_points(X, x)
+        print "neughbours : " + str(neighbours) 
         
+        ### Step 2. For each datapoint x ∈ X, calculate the mean shift m(x).
+        numerator = 0
+        denominator = 0
+        for neighbour in neighbours:
+            distance = euclid_distance(neighbour, x)
+            weight = gaussian_kernel(distance, kernel_bandwidth)
+            numerator += (weight * neighbour)
+            denominator += weight
+        
+        new_x = numerator / denominator
+        
+        ### Step 3. For each datapoint x ∈ X, update x ← m(x).
+        X[i] = new_x
+    
+    past_X.append(np.copy(X))
+    
+print "X :" + str(X)
 
-#Placement des bs
-for i in range (0, nrBS):
-    posxBS[i] = C_x[i]
-    posyBS[i] = C_y[i]
+#placement des bs
+for i in range (nrNodes):
+    posxBS[i] = X[i][0]
+    posyBS[i] = X[i][1] 
+    
+#print posxBS
+#print posyBS
 
 
 ###
@@ -681,7 +667,7 @@ packetsRecBS = []
 for i in range(0,nrBS):
     b = myBS(i)
     bs.append(b)
-    print "b.x " + str(b.x)
+    #print "b.x " + str(b.x)
     packetsAtBS.append([])
     packetsRecBS.append([])    
 
