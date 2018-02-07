@@ -785,6 +785,9 @@ print "DER:", der
 #print "DER method 2:", der
 
 # this can be done to keep graphics visible
+
+graphics = 0 
+
 if (graphics == 1):
     raw_input('Press Enter to continue ...')
 

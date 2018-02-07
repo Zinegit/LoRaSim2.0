@@ -92,7 +92,7 @@ def neighbourhood_points(X, x_centroid, distance = 200):
             eligible_X.append(x)
     return eligible_X
 
-def gaussian_kernel(distance, bandwidth):
+def gaussian_kernel(distance, bandwidth): 
     val = (1/(bandwidth*math.sqrt(2*math.pi))) * np.exp(-0.5*((distance / bandwidth))**2)
     return val
 ##
@@ -735,6 +735,9 @@ print "DER:", der
 print "nrBS:", nrBS
 
 # this can be done to keep graphics visible
+
+graphics = 0
+
 if (graphics == 1):
     raw_input('Press Enter to continue ...')
 
