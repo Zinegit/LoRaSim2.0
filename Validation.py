@@ -15,7 +15,7 @@ Prx = Ptx + GL - Lpld0 + 10*gamma*math.log10(distance/d0)
 
 fname = "validation.dat"
     
-for i in range(1, 600):
+for i in range(1, 601):
     distance = float(i)
     print "distance :" + str(distance)
     print "Lpl", 10*gamma*math.log10(distance/d0)
