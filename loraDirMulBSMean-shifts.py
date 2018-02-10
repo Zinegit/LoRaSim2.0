@@ -640,6 +640,8 @@ for it in range(n_iterations):
         X[i] = new_x
     
     past_X.append(np.copy(X))
+
+###
     
 X_list = [[0, 0] for i in range(len(X))]
 for i in range(len(X)):

@@ -16,7 +16,7 @@ maxDist = 321.98024173
 maxX = 5 * maxDist * math.sin(60*(math.pi/180)) 
 maxY = 5 * maxDist * math.sin(30*(math.pi/180)) 
 
-node_positions = [[0,0] for i in range(nrNodes)]
+node_positions = [[0,0] for i in range(nrNodes + 1)]
 
 first_node = 0
 fname = "nodes.dat"
@@ -57,6 +57,10 @@ for i in range(0, nrNodes):
     with open(fname, "a") as myfile:
         myfile.write(res)
         
+
+res = "\n" + str(maxX/2) + " " + str(maxY/2)
+with open(fname, "a") as myfile:
+    myfile.write(res)   
 myfile.close()
 
 
