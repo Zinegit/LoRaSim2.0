@@ -491,7 +491,7 @@ if len(sys.argv) >= 5:
     # nodes coordinates
     data = np.loadtxt("nodes.dat")
     nrNodes = len(data)
-    
+
     node_positions = [[0,0] for i in range(nrNodes)]
     
     node_positions_x = data[:, 0]
@@ -499,6 +499,9 @@ if len(sys.argv) >= 5:
     for i in range(len(node_positions)):
         node_positions[i][0] = node_positions_x[i]
         node_positions[i][1] = node_positions_y[i]
+        
+    print node_positions
+    print "node_positions[len(node_positions)-1][0]", node_positions[len(node_positions)-1][0]
     
     if len(sys.argv) > 7:
         full_collision = bool(int(sys.argv[7]))
@@ -614,7 +617,7 @@ for i in range(0,nrNodes):
 ## Après optimisation du placement des bs 
 
 #On place juste les nodes sans créer de paquets virtuels (car ils dépendent de la position des bs)
-for i in range(0,nrNodes):
+for i in range(0,len(node_positions)):
     # myNode takes period (in ms), base station id packetlen (in Bytes)
     # 1000000 = 16 min
     node = myNode(i, avgSendTime,20)
@@ -768,6 +771,38 @@ with open(fname, "a") as myfile:
     myfile.write(res)
 myfile.close()
 """
+
+fname = "nodes.dat"
+a = node_positions[len(node_positions) -1][0]
+b = node_positions[len(node_positions) -1][1]
+
+last_line = str(a) + " " + str(b)
+
+file = open('nodes.dat', 'r')
+lines = file.readlines()
+file.close()
+
+xmov = random.randint(-10, 10)
+ymov = random.randint(-10, 10)
+if (a + xmov < maxX):
+    newx = a + xmov
+else:
+    newx = a
+if (b + ymov  < maxY):
+    newy = b + ymov
+else:
+    newy = b
+new_line = str(newx) + " " + str(newy)
+
+file = open('nodes.dat', 'w')
+for line in lines:
+    print line
+    if line != last_line:
+        file.write(line)
+    else:
+        file.write(new_line)
+
+file.close()
 
 exit(-1)
 #below not updated
