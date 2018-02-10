@@ -250,40 +250,11 @@ class myNode():
         self.packet = []
         self.dist = []
 
-    """
+    
     def placeNode(self, i):
-        # this is very complex prodecure for placing nodes
-        # and ensure minimum distance between each pair of nodes
-        found = 0
-        rounds = 0
-        global nodes
-        while (found == 0 and rounds < 100):
-            global maxX
-            global maxY
-            posx = random.randint(0,int(maxX))
-            posy = random.randint(0,int(maxY))
-            #K-MEAN
-            node_positions[self.id][0] = posx
-            node_positions[self.id][1] = posy
-            #
-            if len(nodes) > 0:
-                for index, n in enumerate(nodes):
-                    dist = np.sqrt(((abs(n.x-posx))**2)+((abs(n.y-posy))**2))
-                    if dist >= 10:
-                        found = 1
-                        self.x = posx
-                        self.y = posy
-                    else:
-                        rounds = rounds + 1
-                        if rounds == 100:
-                            print "could not place new node, giving up"
-                            exit(-2)
-            else:
-                print "first node"
-                self.x = posx
-                self.y = posy
-                found = 1
-    """        
+        self.x = node_positions[i][0]
+        self.y = node_positions[i][1]
+               
 
     def createPacket(self, i, packetlen):
         # create "virtual" packet for each BS
@@ -500,12 +471,12 @@ def transmit(env,node):
 
 
 # get arguments
-if len(sys.argv) >= 6:
-    nrNodes = int(sys.argv[1])
-    avgSendTime = int(sys.argv[2])
-    experiment = int(sys.argv[3])
-    simtime = int(sys.argv[4])
-    nrBS = int(sys.argv[5])
+if len(sys.argv) >= 5:
+    
+    avgSendTime = int(sys.argv[1])
+    experiment = int(sys.argv[2])
+    simtime = int(sys.argv[3])
+    nrBS = int(sys.argv[4])
     posxBS = np.zeros(nrBS)
     posyBS = np.zeros(nrBS)
     """
@@ -518,7 +489,16 @@ if len(sys.argv) >= 6:
     """
     
     # nodes coordinates
+    data = np.loadtxt("nodes.dat")
+    nrNodes = len(data)
+    
     node_positions = [[0,0] for i in range(nrNodes)]
+    
+    node_positions_x = data[:, 0]
+    node_positions_y = data[:, 1]
+    for i in range(len(node_positions)):
+        node_positions[i][0] = node_positions_x[i]
+        node_positions[i][1] = node_positions_y[i]
     
     if len(sys.argv) > 7:
         full_collision = bool(int(sys.argv[7]))
@@ -770,13 +750,14 @@ print "DER:", der
 
 # this can be done to keep graphics visible
 
-graphics = 0 
+#graphics = 0 
 
 if (graphics == 1):
     raw_input('Press Enter to continue ...')
 
 # save experiment data into a dat file that can be read by e.g. gnuplot
 # name of file would be:  exp0.dat for experiment 0
+"""
 fname = "exp" + str(experiment) + "BSK-mean" + str(nrBS) + ".dat"
 print fname
 if os.path.isfile(fname):
@@ -786,6 +767,7 @@ else:
 with open(fname, "a") as myfile:
     myfile.write(res)
 myfile.close()
+"""
 
 exit(-1)
 #below not updated
