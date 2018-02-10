@@ -7,25 +7,25 @@ dataKmean = np.loadtxt("exp1BSK-mean6.dat")
 dataKmedoids = np.loadtxt("exp1BSK-medoids6.dat")
 datamean_shifts = np.loadtxt("exp1BSMean-shifts6.dat")
 
-nrNodes = np.array([50, 100, 150, 200, 250, 300, 350])
+nrNodes = np.array([50, 100, 150, 200, 250, 300, 350, 400])
 
 DERSFixe = dataFixe[:, 1]
 DERSKmean = dataKmean[:, 1]
 DERSKmedoids = dataKmedoids[:, 1]
 DERSmean_shifts = datamean_shifts[:, 1]
 
-DERFixe = np.zeros(7)
-DERKmean = np.zeros(7)
-DERKmedoids = np.zeros(7)
-DERmean_shifts = np.zeros(7)
+DERFixe = np.zeros(8)
+DERKmean = np.zeros(8)
+DERKmedoids = np.zeros(8)
+DERmean_shifts = np.zeros(8)
 
-DERFixe_V = np.zeros(7)
-DERKmean_V = np.zeros(7)
-DERKmedoids_V = np.zeros(7)
-DERmean_shifts_V = np.zeros(7)
+DERFixe_V = np.zeros(8)
+DERKmean_V = np.zeros(8)
+DERKmedoids_V = np.zeros(8)
+DERmean_shifts_V = np.zeros(8)
 
 #moyenne des valeurs experimentales
-for j in range(7):
+for j in range(8):
     DERFixe_moyen = 0
     DERFixe_variance = 0
     for i in range(50):
@@ -38,7 +38,7 @@ for j in range(7):
     print j, DERFixe_variance
     DERFixe[j] = DERFixe_moyen
     
-for j in range(7):
+for j in range(8):
     DERKmean_moyen = 0
     DERKmean_variance = 0
     for i in range(50):
@@ -51,7 +51,7 @@ for j in range(7):
     print j, DERKmean_variance
     DERKmean[j] = DERKmean_moyen
     
-for j in range(7):
+for j in range(8):
     DERKmedoids_moyen = 0
     DERKmedoids_variance = 0
     for i in range(50):
@@ -82,7 +82,7 @@ for j in range(5):
 """
 plt.figure    
 
-plt.axis([50, 1000, 0, 1])
+plt.axis([50, 500, 0.7, 1])
 plt.grid()
 
 plt.title("Evolution du DER en fonction du nombre de nodes du reseau pour chaque algorithme")
@@ -95,9 +95,10 @@ plt.plot(nrNodes, DERFixe, label = "Fixe")
 #plt.plot(nrNodes, DERmean_shifts, label = "Mean Shifts")
 """
 ### Trace des variances
+
 plt.figure    
 
-plt.axis([50, 1000, 0, 0.09])
+plt.axis([50, 400, 0, 0.09])
 plt.grid()
 
 plt.title("Evolution de la variance du DER en fonction du nombre de nodes du reseau pour chaque algorithme")
@@ -108,7 +109,6 @@ plt.plot(nrNodes, DERKmean_V, label = "K-mean")
 plt.plot(nrNodes, DERKmedoids_V, label = "K-medoids")
 plt.plot(nrNodes, DERFixe_V, label = "Fixe")
 #plt.plot(nrNodes, DERmean_shifts_V, label = "Mean Shifts")
-
 
 
 plt.legend(loc='bottom left')
