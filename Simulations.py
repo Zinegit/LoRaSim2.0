@@ -278,7 +278,7 @@ print len(nrNodes), len(DERkmeans)
 plt.plot(nrNodes, DERkmeans, label = "K-mean")
 plt.plot(nrNodes, DERkmedoids, label = "K-medoids")
 plt.plot(nrNodes, DERFixe, label = "Fixe")
-plt.plot(nrNodes, DERmean_shifts, label = "Mean Shifts")
+plt.plot(nrNodes, DERmean_shifts, "--", label = "Mean Shifts")
 
 
 ### Trace des variances
