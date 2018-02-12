@@ -59,7 +59,7 @@ import matplotlib.pyplot as plt
 import os
 from matplotlib.patches import Rectangle
 
-## K-MEDOIDS
+## K-MEAN
 import copy
 ##
 
@@ -78,23 +78,11 @@ full_collision = False
 
 
 ##
-#K-medoids part
+#K-mean part
 
-# Distance caculator
-def dist(a, b):
-    return math.sqrt(math.pow(a[0]-b[0],2) + math.pow(a[1]-b[1],2))
-    
-# Cost calculator 
-def cost(medoids, nodes):
-    total_cost = 0
-    for i in range(len(medoids)):
-        cost = 0
-        for j in range(len(nodes)):
-            if clusters[j] == i:
-                cost += dist(nodes[j], medoids[i])
-        total_cost += cost
-    return total_cost    
-    
+# Euclidean Distance Caculator
+def dist(a, b, ax=1):
+    return np.linalg.norm(a - b, axis=ax)
 ##
     
 
@@ -315,7 +303,7 @@ class myNode():
         global graphics
         if (graphics == 1):
             global ax
-            ax.add_artist(plt.Circle((self.x, self.y), 4, fill=True, color='blue'))
+            ax.add_artist(plt.Circle((self.x, self.y), 2, fill=True, color='blue'))
             
     def specialDraw(self, i):
         # graphics for node
@@ -335,7 +323,8 @@ class myNode():
                 ax.add_artist(plt.Circle((self.x, self.y), 4, fill=True, color='pink'))
             elif clusters[i] == 5:
                 ax.add_artist(plt.Circle((self.x, self.y), 4, fill=True, color='brown'))
-                
+            
+
 #
 # this function creates a packet (associated with a node)
 # it also sets all parameters, currently random
@@ -649,69 +638,63 @@ for i in range(0,nrNodes):
     # 1000000 = 16 min
     node = myNode(i, avgSendTime,20)
     node.placeNode(i)
-    #node.draw(i)
+    node.draw(i)
     nodes.append(node)
     
     
-###K-MEDOIDS PART:
+###K-MEAN PART:
 
 # Number of clusters
 k = nrBS
+# X coordinates of random centroids
+C_x = np.random.randint(0, maxX, size=k)
+# Y coordinates of random centroids
+C_y = np.random.randint(0, maxY, size=k)
+C = np.array(list(zip(C_x, C_y)))
 
-# Détermination des medoids
-medoids = []
-#node_positions_temp = node_positions
-for i in range(k):
-    ind_med = random.randint(0, len(node_positions)-1)
-    medoids.append(node_positions[ind_med])
 
-not_finished = True
-while(not_finished):
-    # On détermine à quel cluster appartient chaque point
-    clusters = [0 for i in range(len(node_positions))]
+# To store the value of centroids when it updates
+C_old = np.zeros(C.shape)
+# Cluster Lables(0, 1, 2)
+clusters = np.zeros(len(node_positions))
+# Error func. - Distance between new centroids and old centroids
+error = dist(C, C_old, None)
+# Loop will run till the error becomes zero
+while error != 0:
+    # Assigning each value to its closest cluster
     for i in range(len(node_positions)):
-        distances = []
-        for j in range(len(medoids)):
-            distances.append(dist(node_positions[i], medoids[j]))
+        distances = dist(node_positions[i], C)
         cluster = np.argmin(distances)
         clusters[i] = cluster
-    total_cost = cost(medoids, node_positions)
-    clusters_initial = copy.deepcopy(clusters)
-    old_total_cost = copy.deepcopy(total_cost)    
-    
-    # Swapping entre chaque medoid et un node de son cluster random et calcul du nouveau coût  
-    for i in range(len(medoids)): 
-        medoids_list = []
-        total_costs = []
-        compteur = 0
-        for j in range(len(node_positions)):
-            if clusters[j] == i:
-                compteur += 1
-                medoids.remove(medoids[i])
-                medoids.insert(i, node_positions[j])
-                medoids_list.append(copy.deepcopy(medoids))
-                total_costs.append(cost(medoids, node_positions))
-        if len(total_costs) > 0:
-            mini = min(total_costs)
-            if total_cost >= mini:
-                total_cost = mini
-                swap = np.argmin(total_costs)
-                medoids = medoids_list[swap]
-    if total_cost == old_total_cost:
-        not_finished = False
-
+    # Storing the old centroid values
+    C_old = copy.deepcopy(C)
+    # Finding the new centroids by taking the average value
+    for i in range(k):
+        points = [node_positions[j] for j in range(len(node_positions)) if clusters[j] == i]
+        C[i] = np.mean(points, axis=0)
+        C_x[i] = C[i][0]
+        C_y[i] = C[i][1]
+        #voir évolution
+        #ax.add_artist(plt.Circle((C_x[i], C_y[i]), 2, fill=True, color='red'))
+        #plt.draw()
+    error = dist(C, C_old, None)
 if (graphics == 1):
     for i in range (k):
-        ax.add_artist(plt.Circle((medoids[i][0], medoids[i][1]), 2, fill=True, color='red'))
+        ax.add_artist(plt.Circle((C_x[i], C_y[i]), 2, fill=True, color='red'))
         plt.draw()
+        
+
+print C_x
+print C_y 
 
 #Placement des bs
 for i in range (0, nrBS):
-    posxBS[i] = medoids[i][0]
-    posyBS[i] = medoids[i][1]
-    
+    posxBS[i] = C_x[i]
+    posyBS[i] = C_y[i]
+
 for i in range(0,len(nodes)):
     nodes[i].specialDraw(i)
+
 
 ###
     
@@ -793,7 +776,7 @@ if (graphics == 1):
 
 # save experiment data into a dat file that can be read by e.g. gnuplot
 # name of file would be:  exp0.dat for experiment 0
-fname = "exp" + str(experiment) + "BSK-medoids" + str(nrBS) + ".dat"
+fname = "exp" + str(experiment) + "BSK-means" + str(nrBS) + ".dat"
 print fname
 if os.path.isfile(fname):
     res = "\n" + str(nrNodes) + " " + str(der)

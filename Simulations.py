@@ -3,28 +3,34 @@ import matplotlib.pyplot as plt
 from math import *
 
 dataFixe = np.loadtxt("exp1BSFixe6.dat")
-dataKmean = np.loadtxt("exp1BSK-mean6.dat")
-dataKmedoids = np.loadtxt("exp1BSK-medoids6.dat")
+datakmeans = np.loadtxt("exp1BSK-means6.dat")
+datakmedoids = np.loadtxt("exp1BSK-medoids6.dat")
 datamean_shifts = np.loadtxt("exp1BSMean-shifts6.dat")
 
-nrNodes = np.array([50, 100, 150, 200, 250, 300, 350, 400])
+nrNodes = np.array([50, 100, 150, 200, 250, 300, 350, 400, 500, 600, 700])
 
 DERSFixe = dataFixe[:, 1]
-DERSKmean = dataKmean[:, 1]
-DERSKmedoids = dataKmedoids[:, 1]
+DERSFixe_lol = dataFixe[:, 0]
+DERSkmeans = datakmeans[:, 1]
+DERSkmeans_lol = datakmeans[:, 0]
+DERSkmedoids = datakmedoids[:, 1]
+DERSkmedoids_lol = datakmedoids[:, 0]
 DERSmean_shifts = datamean_shifts[:, 1]
+DERSmean_shifts_lol = datamean_shifts[:, 0]
 
-DERFixe = np.zeros(8)
-DERKmean = np.zeros(8)
-DERKmedoids = np.zeros(8)
-DERmean_shifts = np.zeros(8)
+DERFixe = np.zeros(11)
+DERkmeans = np.zeros(11)
+DERkmedoids = np.zeros(11)
+DERmean_shifts = np.zeros(11)
 
 DERFixe_V = np.zeros(8)
-DERKmean_V = np.zeros(8)
-DERKmedoids_V = np.zeros(8)
+DERkmeans_V = np.zeros(8)
+DERkmedoids_V = np.zeros(8)
 DERmean_shifts_V = np.zeros(8)
 
 #moyenne des valeurs experimentales
+### Fixe
+
 for j in range(8):
     DERFixe_moyen = 0
     DERFixe_variance = 0
@@ -35,37 +41,129 @@ for j in range(8):
         terme = pow((DERSFixe[k + 50*j] - DERFixe_moyen), 2)
         DERFixe_variance += terme
     DERFixe_V[j] = DERFixe_variance
-    print j, DERFixe_variance
     DERFixe[j] = DERFixe_moyen
-    
+
+j = 8
+DERFixe_moyen = 0
+for i in range(1, 23):
+    DERFixe_moyen += DERSFixe[i + 50*j]
+    print DERSFixe_lol[i + 50*j]
+DERFixe_moyen = DERFixe_moyen/22
+DERFixe[j] = DERFixe_moyen
+
+j = 9
+DERFixe_moyen = 0
+for i in range(1, 11):
+    DERFixe_moyen += DERSFixe[i + 50*8 + 22]
+    print DERSFixe_lol[i + 50*8 + 22]
+DERFixe_moyen = DERFixe_moyen/10
+DERFixe[j] = DERFixe_moyen
+
+j = 10
+DERFixe_moyen = 0
+for i in range(1, 11):
+    DERFixe_moyen += DERSFixe[i + 50*8 + 22 + 10]
+    print DERSFixe_lol[i + 50*8 + 22 + 10]
+DERFixe_moyen = DERFixe_moyen/10
+DERFixe[j] = DERFixe_moyen
+
+"""
+for l in range(1, 13):
+    print DERSFixe_lol[50 * (j+1) + l]
+    DERFixe[j + l] = DERSFixe[50*(j+1) + l]
+"""
+### K-means
+
 for j in range(8):
-    DERKmean_moyen = 0
-    DERKmean_variance = 0
+    DERkmeans_moyen = 0
+    DERkmeans_variance = 0
     for i in range(50):
-        DERKmean_moyen += DERSKmean[i + 50*j]
-    DERKmean_moyen = DERKmean_moyen/50
+        DERkmeans_moyen += DERSkmeans[i + 50*j]
+    DERkmeans_moyen = DERkmeans_moyen/50
     for k in range(50):
-        terme = pow((DERSKmean[k + 50*j] - DERKmean_moyen), 2)
-        DERKmean_variance += terme
-    DERKmean_V[j] = DERKmean_variance
-    print j, DERKmean_variance
-    DERKmean[j] = DERKmean_moyen
+        terme = pow((DERSkmeans[k + 50*j] - DERkmeans_moyen), 2)
+        DERkmeans_variance += terme
+    DERkmeans_V[j] = DERkmeans_variance
+    DERkmeans[j] = DERkmeans_moyen
+    #print DERkmeans
+
+j = 8
+DERkmeans_moyen = 0
+for i in range(1, 22):
+    DERkmeans_moyen += DERSkmeans[i + 50*j]
+    print DERSkmeans_lol[i + 50*j]
+DERkmeans_moyen = DERkmeans_moyen/21
+DERkmeans[j] = DERkmeans_moyen
+
+j = 9
+DERkmeans_moyen = 0
+for i in range(1, 11):
+    DERkmeans_moyen += DERSkmeans[i + 50*8 + 21]
+    print DERSkmeans_lol[i + 50*8 + 21]
+DERkmeans_moyen = DERkmeans_moyen/10
+DERkmeans[j] = DERkmeans_moyen
+
+j = 10
+DERkmeans_moyen = 0
+for i in range(1, 11):
+    DERkmeans_moyen += DERSkmeans[i + 50*8 + 21 + 10]
+    print DERSkmeans_lol[i + 50*8 + 21 + 10]
+DERkmeans_moyen = DERkmeans_moyen/10
+DERkmeans[j] = DERkmeans_moyen
+
+"""
+for l in range(1, 13):
+    DERkmeans[j + l] = DERSkmeans[50*(j+1) + l]
+"""
     
+### K-medoids
+
 for j in range(8):
-    DERKmedoids_moyen = 0
-    DERKmedoids_variance = 0
+    DERkmedoids_moyen = 0
+    DERkmedoids_variance = 0
     for i in range(50):
-        DERKmedoids_moyen += DERSKmedoids[i + 50*j]
-    DERKmedoids_moyen = DERKmedoids_moyen/50
+        DERkmedoids_moyen += DERSkmedoids[i + 50*j]
+    DERkmedoids_moyen = DERkmedoids_moyen/50
     for k in range(50):
-        terme = pow((DERSKmedoids[k + 50*j] - DERKmedoids_moyen), 2)
-        DERKmedoids_variance += terme
-    DERKmedoids_V[j] = DERKmedoids_variance
-    print j, DERKmedoids_variance
-    DERKmedoids[j] = DERKmedoids_moyen
+        terme = pow((DERSkmedoids[k + 50*j] - DERkmedoids_moyen), 2)
+        DERkmedoids_variance += terme
+    DERkmedoids_V[j] = DERkmedoids_variance
+    DERkmedoids[j] = DERkmedoids_moyen
+
+
+j = 8
+DERkmedoids_moyen = 0
+for i in range(1, 23):
+    DERkmedoids_moyen += DERSkmedoids[i + 50*j]
+    print DERSkmedoids_lol[i + 50*j]
+DERkmedoids_moyen = DERkmedoids_moyen/22
+DERkmedoids[j] = DERkmedoids_moyen
+
+j = 9
+DERkmedoids_moyen = 0
+for i in range(1, 11):
+    DERkmedoids_moyen += DERSkmedoids[i + 50*8 + 22]
+    print DERSkmedoids_lol[i + 50*8 + 22]
+DERkmedoids_moyen = DERkmedoids_moyen/10
+DERkmedoids[j] = DERkmedoids_moyen
+
+j = 10
+DERkmedoids_moyen = 0
+for i in range(1, 11):
+    DERkmedoids_moyen += DERSkmedoids[i + 50*8 + 22 + 10]
+    print DERSkmedoids_lol[i + 50*8 + 22 + 10]
+DERkmedoids_moyen = DERkmedoids_moyen/10
+DERkmedoids[j] = DERkmedoids_moyen
+
+"""
+for l in range(1, 13):
+    DERkmedoids[j + l] = DERSkmedoids[50*(j+1) + l]
+"""
   
-"""  
-for j in range(5):
+### Mean shift
+  
+"""
+for j in range(8):
     DERmean_shifts_moyen = 0
     DERmean_shifts_variance = 0
     for i in range(50):
@@ -77,42 +175,131 @@ for j in range(5):
     DERmean_shifts_V[j] = DERmean_shifts_variance
     DERmean_shifts[j] = DERmean_shifts_moyen
 """
+j = 0
+DERmean_shifts_moyen = 0
+for i in range(0, 13):
+    DERmean_shifts_moyen += DERSmean_shifts[i]
+    print DERSmean_shifts_lol[i]
+DERmean_shifts_moyen = DERmean_shifts_moyen/13
+DERmean_shifts[j] = DERmean_shifts_moyen
+
+j = 1
+DERmean_shifts_moyen = 0
+for i in range(0, 16):
+    DERmean_shifts_moyen += DERSmean_shifts[13 + i]
+    print DERSmean_shifts_lol[13 + i]
+DERmean_shifts_moyen = DERmean_shifts_moyen/16
+DERmean_shifts[j] = DERmean_shifts_moyen
+
+j = 2
+DERmean_shifts_moyen = 0
+for i in range(0, 16):
+    DERmean_shifts_moyen += DERSmean_shifts[13 + 16 + i]
+    print DERSmean_shifts_lol[13 + 16 + i]
+DERmean_shifts_moyen = DERmean_shifts_moyen/16
+DERmean_shifts[j] = DERmean_shifts_moyen
+
+j = 3
+DERmean_shifts_moyen = 0
+for i in range(0, 8):
+    DERmean_shifts_moyen += DERSmean_shifts[13 + 16 + 16 + i]
+    print DERSmean_shifts_lol[13 + 16 + 16 + i]
+DERmean_shifts_moyen = DERmean_shifts_moyen/8
+DERmean_shifts[j] = DERmean_shifts_moyen
+
+j = 4
+DERmean_shifts_moyen = 0
+for i in range(0, 11):
+    DERmean_shifts_moyen += DERSmean_shifts[13 + 16 + 16 + 8 + i]
+    print DERSmean_shifts_lol[13 + 16 + 16 + 8 + i]
+DERmean_shifts_moyen = DERmean_shifts_moyen/11
+DERmean_shifts[j] = DERmean_shifts_moyen
+
+j = 5
+DERmean_shifts_moyen = 0
+for i in range(0, 5):
+    DERmean_shifts_moyen += DERSmean_shifts[13 + 16 + 16 + 8 + 11 + i]
+    print DERSmean_shifts_lol[13 + 16 + 16 + 8 + 11 + i]
+DERmean_shifts_moyen = DERmean_shifts_moyen/5
+DERmean_shifts[j] = DERmean_shifts_moyen
+
+j = 6
+DERmean_shifts_moyen = 0
+for i in range(0, 11):
+    DERmean_shifts_moyen += DERSmean_shifts[13 + 16 + 16 + 8 + 11 + 5 + i]
+    print DERSmean_shifts_lol[13 + 16 + 16 + 8 + 11 + 5 + i]
+DERmean_shifts_moyen = DERmean_shifts_moyen/11
+DERmean_shifts[j] = DERmean_shifts_moyen
+
+j = 7
+DERmean_shifts_moyen = 0
+for i in range(0, 4):
+    DERmean_shifts_moyen += DERSmean_shifts[13 + 16 + 16 + 8 + 11 + 5 + 11 + i]
+    print DERSmean_shifts_lol[13 + 16 + 16 + 8 + 11 + 5 + 11 + i]
+DERmean_shifts_moyen = DERmean_shifts_moyen/4
+DERmean_shifts[j] = DERmean_shifts_moyen
+
+j = 8
+DERmean_shifts_moyen = 0
+for i in range(0, 3):
+    DERmean_shifts_moyen += DERSmean_shifts[13 + 16 + 16 + 8 + 11 + 5 + 11 + 4 + i]
+    print DERSmean_shifts_lol[13 + 16 + 16 + 8 + 11 + 5 + 11 + 4 +i]
+DERmean_shifts_moyen = DERmean_shifts_moyen/3
+DERmean_shifts[j] = DERmean_shifts_moyen
+
+j = 9
+DERmean_shifts_moyen = 0
+for i in range(0, 2):
+    DERmean_shifts_moyen += DERSmean_shifts[13 + 16 + 16 + 8 + 11 + 5 + 11 + 4 + 3 + i]
+    print DERSmean_shifts_lol[13 + 16 + 16 + 8 + 11 + 5 + 11 + 4 + 3 + i]
+DERmean_shifts_moyen = DERmean_shifts_moyen/2
+DERmean_shifts[j] = DERmean_shifts_moyen
+
+j = 10
+DERmean_shifts_moyen = 0
+for i in range(0, 1):
+    DERmean_shifts_moyen += DERSmean_shifts[13 + 16 + 16 + 8 + 11 + 5 + 11 + 4 + 3 + 2 + i]
+    print DERSmean_shifts_lol[13 + 16 + 16 + 8 + 11 + 5 + 11 + 4 + 3 + 2 + i]
+DERmean_shifts_moyen = DERmean_shifts_moyen/1
+DERmean_shifts[j] = DERmean_shifts_moyen
 
 ### Trace des moyennes
-"""
+
 plt.figure    
 
-plt.axis([50, 500, 0.7, 1])
+plt.axis([50, 700, 0.65, 1])
 plt.grid()
 
 plt.title("Evolution du DER en fonction du nombre de nodes du reseau pour chaque algorithme")
 plt.xlabel("nombre de nodes")
 plt.ylabel("DER")
 
-plt.plot(nrNodes, DERKmean, label = "K-mean")
-plt.plot(nrNodes, DERKmedoids, label = "K-medoids")
+print len(nrNodes), len(DERkmeans)
+plt.plot(nrNodes, DERkmeans, label = "K-mean")
+plt.plot(nrNodes, DERkmedoids, label = "K-medoids")
 plt.plot(nrNodes, DERFixe, label = "Fixe")
-#plt.plot(nrNodes, DERmean_shifts, label = "Mean Shifts")
-"""
-### Trace des variances
+plt.plot(nrNodes, DERmean_shifts, label = "Mean Shifts")
 
+
+### Trace des variances
+"""
 plt.figure    
 
-plt.axis([50, 400, 0, 0.09])
+plt.axis([50, 500, 0.7, 0.09])
 plt.grid()
 
 plt.title("Evolution de la variance du DER en fonction du nombre de nodes du reseau pour chaque algorithme")
 plt.xlabel("nombre de nodes")
 plt.ylabel("Variance du DER")
 
-plt.plot(nrNodes, DERKmean_V, label = "K-mean")
-plt.plot(nrNodes, DERKmedoids_V, label = "K-medoids")
+plt.plot(nrNodes, DERkmeans_V, label = "K-mean")
+plt.plot(nrNodes, DERkmedoids_V, label = "K-medoids")
 plt.plot(nrNodes, DERFixe_V, label = "Fixe")
 #plt.plot(nrNodes, DERmean_shifts_V, label = "Mean Shifts")
-
+"""
 
 plt.legend(loc='bottom left')
 
 plt.show()    
-    
+
     
