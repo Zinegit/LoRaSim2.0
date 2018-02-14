@@ -500,9 +500,7 @@ if len(sys.argv) >= 5:
     for i in range(len(node_positions)):
         node_positions[i][0] = node_positions_x[i]
         node_positions[i][1] = node_positions_y[i]
-        
-    print node_positions
-    print "node_positions[len(node_positions)-1][0]", node_positions[len(node_positions)-1][0]
+
     
     if len(sys.argv) > 7:
         full_collision = bool(int(sys.argv[7]))

@@ -19,6 +19,6 @@ do
 	python GenerateNodesPlaced.py $j
 	for i in $(seq 10)	
 	do		
-		python loraDirMulBSClusterK-means.py 1002000 1 5011200000 6
+		python loraDirMulBSClusterK-medoids.py 1002000 1 5011200000 6
 	done
 done
