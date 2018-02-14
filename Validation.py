@@ -15,6 +15,7 @@ Prx = Ptx + GL - Lpld0 + 10*gamma*math.log10(distance/d0)
 data_recepteur = np.loadtxt("RecepteurTP14.txt")
 data_emetteur = np.loadtxt("EmetteurTP14.txt")
 data_sim = np.loadtxt("validation.dat")
+data_emetteur_seuil = np.loadtxt("EmetteurTP2.txt")
 
 latitudes_recepteur = data_recepteur[:, 0]
 longitudes_recepteur = data_recepteur[:, 1]
@@ -26,6 +27,10 @@ rssi_emetteur = data_emetteur[:, 2]
 
 distances_sim = np.asarray(data_sim[:, 0])
 rssi_sim = np.asarray(data_sim[:, 1])
+
+latitudes_emetteur_seuil = data_emetteur_seuil[:, 0]
+longitudes_emetteur_seuil = data_emetteur_seuil[:, 1]
+rssi_emetteur_seuil = data_emetteur_seuil[:, 2]
 
 def convertRad(x):
     return (math.pi * x) / 180
@@ -55,20 +60,30 @@ plt.figure
 
 plt.grid()
 
+"""
 plt.title("puissance recue en fonction de la distance avec l'emetteur")
 plt.xlabel("distance (m)")
 plt.ylabel("rssi (dBm)")
-
-print len(rssi_emetteur)
-print len(distances_emetteur)
 
 plt.plot(distances_recepteur, rssi_recepteur, label = "experience recepteur")
 plt.plot(distances_emetteur, rssi_emetteur, label = "experience emetteur")
 plt.plot(distances_sim, rssi_sim, label = "theorique")
 
 plt.legend(loc='bottom left')
+"""
+
+distances_emetteur_seuil = [0 for i in range(len(latitudes_emetteur_seuil))]
+for i in range(len(latitudes_emetteur_seuil)):
+    distances_emetteur_seuil[i] = dist(latitudes_emetteur_seuil[0], longitudes_emetteur_seuil[0], latitudes_emetteur_seuil[i], longitudes_emetteur_seuil[i])
+    
+plt.title("puissance recue en fonction de la distance avec l'emetteur")
+plt.xlabel("distance (m)")
+plt.ylabel("rssi (dBm)")
+
+plt.plot(distances_emetteur_seuil, rssi_emetteur_seuil)
 
 plt.show()    
+    
     
 """
      
