@@ -501,8 +501,15 @@ if len(sys.argv) >= 5:
         node_positions[i][0] = node_positions_x[i]
         node_positions[i][1] = node_positions_y[i]
         
-    print node_positions
-    print "node_positions[len(node_positions)-1][0]", node_positions[len(node_positions)-1][0]
+    file = open('nodes.dat', 'w')
+    file.close()
+    for i in range(0, nrNodes):
+        posx = node_positions[i][0] + 10
+        posy = node_positions[i][1] + 10
+        res = "\n" + str(posx) + " " + str(posy)
+        with open("nodes.dat", "a") as file:
+            file.write(res)
+    file.close()
     
     if len(sys.argv) > 7:
         full_collision = bool(int(sys.argv[7]))
@@ -626,59 +633,78 @@ for i in range(0,len(node_positions)):
     node.draw(i)
     nodes.append(node)
     
-    
+
 ###K-MEAN PART:
 
-# Number of clusters
-k = nrBS
-# X coordinates of random centroids
-C_x = np.random.randint(0, maxX, size=k)
-# Y coordinates of random centroids
-C_y = np.random.randint(0, maxY, size=k)
-C = np.array(list(zip(C_x, C_y)))
+#Si le fichier contenant les positions des basestations existe déjà on passe cette partie. 
+fname = "BaseStationsPositions.dat"
 
-
-# To store the value of centroids when it updates
-C_old = np.zeros(C.shape)
 # Cluster Lables(0, 1, 2)
 clusters = np.zeros(len(node_positions))
-# Error func. - Distance between new centroids and old centroids
-error = dist(C, C_old, None)
-# Loop will run till the error becomes zero
-while error != 0:
-    # Assigning each value to its closest cluster
-    for i in range(len(node_positions)):
-        distances = dist(node_positions[i], C)
-        cluster = np.argmin(distances)
-        clusters[i] = cluster
-    # Storing the old centroid values
-    C_old = copy.deepcopy(C)
-    # Finding the new centroids by taking the average value
-    for i in range(k):
-        points = [node_positions[j] for j in range(len(node_positions)) if clusters[j] == i]
-        C[i] = np.mean(points, axis=0)
-        C_x[i] = C[i][0]
-        C_y[i] = C[i][1]
-        #voir évolution
-        #ax.add_artist(plt.Circle((C_x[i], C_y[i]), 2, fill=True, color='red'))
-        #plt.draw()
+
+if not os.path.isfile(fname):
+    myfile = open('BaseStationsPositions.dat', 'w')
+    # Number of clusters
+    k = nrBS
+    # X coordinates of random centroids
+    C_x = np.random.randint(0, maxX, size=k)
+    # Y coordinates of random centroids
+    C_y = np.random.randint(0, maxY, size=k)
+    C = np.array(list(zip(C_x, C_y)))
+    
+    # To store the value of centroids when it updates
+    C_old = np.zeros(C.shape)
+
+   
+    # Error func. - Distance between new centroids and old centroids
     error = dist(C, C_old, None)
-if (graphics == 1):
-    for i in range (k):
-        ax.add_artist(plt.Circle((C_x[i], C_y[i]), 2, fill=True, color='red'))
-        plt.draw()
-        
-
-print C_x
-print C_y 
-
-#Placement des bs
-for i in range (0, nrBS):
-    posxBS[i] = C_x[i]
-    posyBS[i] = C_y[i]
+    # Loop will run till the error becomes zero
+    while error != 0:
+        # Assigning each value to its closest cluster
+        for i in range(len(node_positions)):
+            distances = dist(node_positions[i], C)
+            cluster = np.argmin(distances)
+            clusters[i] = cluster
+        # Storing the old centroid values
+        C_old = copy.deepcopy(C)
+        # Finding the new centroids by taking the average value
+        for i in range(k):
+            points = [node_positions[j] for j in range(len(node_positions)) if clusters[j] == i]
+            C[i] = np.mean(points, axis=0)
+            C_x[i] = C[i][0]
+            C_y[i] = C[i][1]
+            #voir évolution
+            #ax.add_artist(plt.Circle((C_x[i], C_y[i]), 2, fill=True, color='red'))
+            #plt.draw()
+        error = dist(C, C_old, None)
+    if (graphics == 1):
+        for i in range (k):
+            ax.add_artist(plt.Circle((C_x[i], C_y[i]), 2, fill=True, color='red'))
+            plt.draw()
+            
+    #Placement des bs et écriture dans le fichier des positions
+    for i in range (0, nrBS):
+        posxBS[i] = C_x[i]
+        posyBS[i] = C_y[i]
+        res = "\n" + str(posxBS[i]) + " " + str(posyBS[i])
+        myfile.write(res)
+    myfile.close()
+            
+else:
+    myfile = open('BaseStationsPositions.dat', 'r')
+    # BaseStations coordinates
+    data_bs = np.loadtxt("BaseStationsPositions.dat")
+    
+    posxBS = data_bs[:, 0]
+    posyBS = data_bs[:, 1]
+    myfile.close()
 
 for i in range(0,len(nodes)):
     nodes[i].specialDraw(i)
+       
+    
+       
+        
 
 
 ###
@@ -754,7 +780,7 @@ print "DER:", der
 
 # this can be done to keep graphics visible
 
-#graphics = 0 
+graphics = 0 
 
 if (graphics == 1):
     raw_input('Press Enter to continue ...')
@@ -773,6 +799,14 @@ with open(fname, "a") as myfile:
 myfile.close()
 """
 
+fname = "moves.dat"
+if os.path.isfile(fname):
+    res = "\n" + str(der)
+with open(fname, "a") as myfile:
+    myfile.write(res)
+myfile.close()
+
+"""
 fname = "nodes.dat"
 a = node_positions[len(node_positions) -1][0]
 b = node_positions[len(node_positions) -1][1]
@@ -804,6 +838,7 @@ for line in lines:
         file.write(new_line)
 
 file.close()
+"""
 
 exit(-1)
 #below not updated

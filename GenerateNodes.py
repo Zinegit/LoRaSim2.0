@@ -23,8 +23,14 @@ fname = "nodes.dat"
 if os.path.isfile(fname):
     open('nodes.dat', 'w').close()
     
+    
+for i in range(0, int(nrNodes/10)):
+    res = "\n" + str(0) + " " + str(i * 800/(nrNodes/10))
+    with open(fname, "a") as myfile:
+        myfile.write(res)
+    
 
-for i in range(0, nrNodes):    
+for i in range(0, int(nrNodes*0.9)):    
     # this is very complex prodecure for placing nodes
     # and ensure minimum distance between each pair of nodes
     found = 0
