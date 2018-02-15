@@ -503,9 +503,16 @@ if len(sys.argv) >= 5:
         
     file = open('nodes.dat', 'w')
     file.close()
-    for i in range(0, nrNodes):
+    for i in range(0, 50):
         posx = node_positions[i][0] + 10
-        posy = node_positions[i][1] + 10
+        posy = node_positions[i][1]
+        res = "\n" + str(posx) + " " + str(posy)
+        with open("nodes.dat", "a") as file:
+            file.write(res)
+    for i in range(50, 100):
+        print i 
+        posx = node_positions[i][0] 
+        posy = node_positions[i][1]
         res = "\n" + str(posx) + " " + str(posy)
         with open("nodes.dat", "a") as file:
             file.write(res)

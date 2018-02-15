@@ -10,6 +10,8 @@ datamean_shifts = np.loadtxt("exp1BSMean-shifts6.dat")
 datakmeanscluster = np.loadtxt("exp1BSClusterK-mean6.dat")
 datakmedoidscluster = np.loadtxt("exp1BSClusterK-medoids6.dat")
 
+datamoves = np.loadtxt("moves.dat")
+
 nrNodes = np.array([50, 100, 150, 200, 250, 300, 350, 400, 500, 600, 700])
 nrNodes_cluster = np.array([50, 100, 150, 200, 250, 300])
 
@@ -26,6 +28,15 @@ DERSkmeanscluster = datakmeanscluster[:, 1]
 DERSkmeanscluster_lol = datakmeanscluster[:, 0]
 DERSkmedoidscluster = datakmedoidscluster[:, 1]
 DERSkmedoidscluster_lol = datakmedoidscluster[:, 0]
+
+DERSmoves = datamoves[:]
+iterations = np.zeros(139)
+it = [10 * i for i in range(139)]
+for i in range(len(it)):
+    iterations[i] = it[i]
+    
+print iterations
+print DERSmoves
 
 DERFixe = np.zeros(11)
 DERkmeans = np.zeros(11)
@@ -274,7 +285,7 @@ for i in range(0, 1):
 DERmean_shifts_moyen = DERmean_shifts_moyen/1
 DERmean_shifts[j] = DERmean_shifts_moyen
 """
-
+"""
 ### K-means clustering
 for j in range(6):
     DERkmeans_moyen_cluster = 0
@@ -292,7 +303,7 @@ for j in range(6):
         DERkmedoids_moyen_cluster += DERSkmedoidscluster[i + 10*j]
     DERkmedoids_moyen_cluster = DERkmedoids_moyen_cluster/10
     DERkmedoidscluster[j] = DERkmedoids_moyen_cluster
-
+"""
 ### Trace des moyennes
 """
 plt.figure    
@@ -329,7 +340,7 @@ plt.plot(nrNodes, DERFixe_V, label = "Fixe")
 """
 
 ### Trace des moyennes clusterees
-
+"""
 plt.figure    
 
 plt.axis([50, 400, 0.65, 1])
@@ -342,6 +353,20 @@ plt.ylabel("DER")
 print len(nrNodes_cluster), len(DERkmeans)
 plt.plot(nrNodes_cluster, DERkmeanscluster, label = "K-means")
 plt.plot(nrNodes_cluster, DERkmedoidscluster, label = "K-medoids")
+"""
+###Moves
+
+plt.figure    
+
+plt.axis([50, 1400, 0.7, 1])
+plt.grid()
+
+plt.title("Evolution du DER au cours du temps")
+plt.xlabel("distance parcourue(m)")
+plt.ylabel("DER")
+
+print len(iterations), len(DERSmoves)
+plt.plot(iterations, DERSmoves)
 
 plt.legend(loc='bottom left')
 

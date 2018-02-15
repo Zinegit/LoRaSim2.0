@@ -752,7 +752,7 @@ print "DER:", der
 
 # this can be done to keep graphics visible
 
-graphics = 0 
+#graphics = 0 
 
 if (graphics == 1):
     raw_input('Press Enter to continue ...')
